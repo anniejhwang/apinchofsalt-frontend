@@ -2,9 +2,14 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { RecipesIndex } from "./RecipesIndex";
 import { RecipesNew } from "./RecipesNew";
+import { RecipesShow } from "./RecipesShow";
+
+import { Modal } from "./Modal";
 
 export function Content() {
   const [recipes, setRecipes] = useState([]);
+  const [isRecipesShowVisible, setIsRecipesShowVisible] = useState(false);
+  const [currentRecipe, setCurrentRecipe] = useState({});
 
   const handleIndexRecipes = () => {
     console.log("handleIndexRecipes");
@@ -22,11 +27,25 @@ export function Content() {
     });
   };
 
+  const handleShowRecipe = (recipe) => {
+    console.log("handleShowRecipe", recipe);
+    setIsRecipesShowVisible(true);
+    setCurrentRecipe(recipe);
+  };
+
+  const handleClose = () => {
+    console.log("handleClose");
+    setIsRecipesShowVisible(false);
+  };
+
   useEffect(handleIndexRecipes, []);
   return (
     <div>
       <RecipesNew onCreateRecipe={handleCreateRecipe} />
-      <RecipesIndex recipes={recipes} />
+      <RecipesIndex Recipes={Recipes} onShowRecipe={handleShowRecipe} />
+      <Modal show={isRecipesShowVisible} onClose={handleClose}>
+        <RecipesShow recipe={currentRecipe} />
+      </Modal>
     </div>
   );
 }
